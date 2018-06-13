@@ -1,0 +1,60 @@
+(deftype Rune [bytes (Array Char)])
+
+(defmodule Rune
+  (defn str [r]
+    (String.from-chars (bytes r)))
+
+  (defn add-byte [r c]
+    (set-bytes @r (Array.push-back @(Rune.bytes r) c)))
+
+  (defn length [r]
+    (Array.length (bytes r)))
+)
+
+(deftype UTF8 [runes (Array Rune)])
+
+(defmodule UTF8
+  (hidden utf8-cont?)
+  (defn utf8-cont? [c]
+    (let [i (Char.to-int c)]
+      (= 128 (Int.bit-and 192 i))))
+
+  (hidden to-runes)
+  (defn to-runes [s]
+    (let-do [chs (chars s)
+             rune (Rune.init [])
+             res []]
+      (for [i 0 (Array.length &chs)]
+        (let-do [cur @(Array.nth &chs i)]
+          (when (and (not (utf8-cont? cur)) (> (Rune.length &rune) 0))
+            (do
+              (set! res (Array.push-back res @&rune))
+              (set! rune (Rune.init []))))
+          (set! rune (Rune.add-byte &rune cur))))
+      (when (> (Rune.length &rune) 0)
+        (set! res (Array.push-back res rune)))
+      res))
+
+  (hidden from-runes)
+  (defn from-runes [r]
+    (let-do [res @""]
+      (for [i 0 (Array.length r)]
+        (set! res (String.append &res &(from-chars (Rune.bytes (Array.nth r i))))))
+      res))
+
+  (doc from-string "Creates an UTF-8 string from a regular string.")
+  (defn from-string [s]
+    (init (to-runes s)))
+
+  (doc str "Creates a regular string from a UTF-8 string")
+  (defn str [u]
+    (from-runes (runes u)))
+
+  (doc nth "Returns the nth rune from a UTF-8-encoded string.")
+  (defn nth [u i]
+    @(Array.nth (runes u) i))
+
+  (doc length "Returns the length of a UTF-8-encoded string.")
+  (defn length [u]
+    (Array.length (runes u)))
+)

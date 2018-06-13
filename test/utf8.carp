@@ -1,0 +1,26 @@
+(load "Test.carp")
+
+(load "utf8.carp")
+
+(use-all Test UTF8)
+
+(defn main []
+  (with-test test
+    (assert-equal test
+                  "höy"
+                  &(UTF8.str &(from-string "höy"))
+                  "conversion to and from strings works"
+    )
+    (assert-equal test
+                  2
+                  (UTF8.length &(from-string "äö"))
+                  "UTF-8 length works"
+    )
+    (assert-equal test
+                  "ä"
+                  &(str &(nth &(from-string "ööäö") 2))
+                  "UTF-8 indexing works"
+    )
+    (print-test-results test)
+  )
+)
