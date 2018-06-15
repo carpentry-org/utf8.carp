@@ -21,6 +21,56 @@
                   &(str &(nth &(from-string "ööäö") 2))
                   "UTF-8 indexing works"
     )
+    (assert-equal test
+                  "äÖ"
+                  &(str &(UTF8.append &(from-string "ä") &(from-string "Ö")))
+                  "UTF-8 appending works"
+    )
+    (assert-equal test
+                  "ölüp"
+                  &(str &(UTF8.reverse &(from-string "pülö")))
+                  "UTF-8 reversing works"
+    )
+    (assert-equal test
+                  true
+                  (UTF8.empty? &(from-string ""))
+                  "UTF-8 empty check works I"
+    )
+    (assert-equal test
+                  false
+                  (UTF8.empty? &(from-string "a"))
+                  "UTF-8 empty check works II"
+    )
+    (assert-equal test
+                  "rüm"
+                  &(str &(UTF8.substring &(from-string "perümpor") 2 5))
+                  "UTF-8 substring works"
+    )
+    (assert-equal test
+                  "rüm"
+                  &(str &(UTF8.suffix-string &(from-string "perüm") 2))
+                  "UTF-8 suffix-string works"
+    )
+    (assert-equal test
+                  "rüm"
+                  &(str &(UTF8.prefix-string &(from-string "rümpor") 3))
+                  "UTF-8 prefix-string works"
+    )
+    (assert-equal test
+                  ""
+                  &(str &(UTF8.zero))
+                  "UTF-8 zero works"
+    )
+    (assert-equal test
+                  true
+                  (UTF8.starts-with? &(UTF8.from-string "öläm") &(UTF8.from-string "ölämpö"))
+                  "UTF-8 starts-with check works"
+    )
+    (assert-equal test
+                  true
+                  (UTF8.ends-with? &(UTF8.from-string "öläm") &(UTF8.from-string "pööläm"))
+                  "UTF-8 ends-with check works"
+    )
     (print-test-results test)
   )
 )

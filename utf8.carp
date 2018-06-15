@@ -9,11 +9,20 @@
 
   (defn length [r]
     (Array.length (bytes r)))
+
+  (defn = [a b]
+    (= (bytes &a) (bytes &b)))
+
+  (defn /= [a b]
+    (not (= a b)))
 )
 
 (deftype UTF8 [runes (Array Rune)])
 
 (defmodule UTF8
+  (defn = [a b]
+    (= (runes a) (runes b)))
+
   (hidden utf8-cont?)
   (defn utf8-cont? [c]
     (let [i (Char.to-int c)]
@@ -57,4 +66,41 @@
   (doc length "Returns the length of a UTF-8-encoded string.")
   (defn length [u]
     (Array.length (runes u)))
+
+  (doc append "Appends two UTF-8-encoded strings.")
+  (defn append [a b]
+    (UTF8.init (Array.concat &[@(runes a) @(runes b)])))
+
+  (doc reverse "Reverses a UTF-8-encoded strings.")
+  (defn reverse [u]
+    (UTF8.init (Array.reverse @(runes u))))
+
+  (doc empty? "Checks whether a UTF-8-encoded string is empty.")
+  (defn empty? [u]
+    (= (length (the (Ref UTF8) u)) 0))
+
+  (doc substring "Returns a substring of the string from the index to the index b.")
+  (defn substring [u a b]
+    (UTF8.init (Array.subarray (runes u) a b)))
+
+  (doc prefix-string "Returns the first n chararacters of the string s.")
+  (defn prefix-string [u n]
+    (UTF8.init (Array.prefix-array (runes u) n)))
+
+  (doc suffix-string "Returns the last n chararacters of the string s.")
+  (defn suffix-string [u n]
+    (UTF8.init (Array.suffix-array (runes u) n)))
+
+  (doc starts-with? "Checks if the string u begins with the string sub.")
+  (sig starts-with? (Fn [(Ref UTF8) (Ref UTF8)] Bool))
+  (defn starts-with? [sub s]
+    (= sub &(UTF8.prefix-string s (length sub))))
+
+  (doc ends-with? "Checks if the string u ends with the string sub.")
+  (sig ends-with? (Fn [(Ref UTF8) (Ref UTF8)] Bool))
+  (defn ends-with? [sub s]
+    (= sub &(UTF8.suffix-string s (- (length s) (length sub)))))
+
+  (doc zero "Returns the empty string.")
+  (defn zero [] (the UTF8 (from-string "")))
 )
