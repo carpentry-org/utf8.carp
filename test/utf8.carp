@@ -71,6 +71,5 @@
                   (UTF8.ends-with? &(UTF8.from-string "öläm") &(UTF8.from-string "pööläm"))
                   "UTF-8 ends-with check works"
     )
-    (print-test-results test)
   )
 )

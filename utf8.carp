@@ -46,10 +46,9 @@
 
   (hidden from-runes)
   (defn from-runes [r]
-    (let-do [res @""]
-      (for [i 0 (Array.length r)]
-        (set! res (String.append &res &(from-chars (Rune.bytes (Array.nth r i))))))
-      res))
+    (Array.reduce (fn [x y] (String.append x &(from-chars (Rune.bytes y))))
+                  @""
+                  r))
 
   (doc from-string "Creates an UTF-8 string from a regular string.")
   (defn from-string [s]
