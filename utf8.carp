@@ -24,11 +24,13 @@
     (= (runes a) (runes b)))
 
   (hidden utf8-cont?)
+  (private utf8-cont?)
   (defn utf8-cont? [c]
     (let [i (Char.to-int c)]
       (= 128 (Int.bit-and 192 i))))
 
   (hidden to-runes)
+  (private to-runes)
   (defn to-runes [s]
     (let-do [chs (chars s)
              rune (Rune.init [])
@@ -45,8 +47,9 @@
       res))
 
   (hidden from-runes)
+  (private from-runes)
   (defn from-runes [r]
-    (Array.reduce (fn [x y] (String.append x &(from-chars (Rune.bytes y))))
+    (Array.reduce &(fn [x y] (String.append &x &(from-chars (Rune.bytes y))))
                   @""
                   r))
 

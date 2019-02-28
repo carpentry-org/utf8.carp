@@ -1,0 +1,9 @@
+(load "utf8.carp")
+
+(use UTF8)
+
+(defn main []
+  (let-do [s (UTF8.from-string "hεllö")]
+    (println* (length &s))
+    (println* (length "hεllö"))
+    (println* &(nth &s 1))))
