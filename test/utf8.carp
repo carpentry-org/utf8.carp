@@ -17,9 +17,19 @@
                   "UTF-8 length works"
     )
     (assert-equal test
-                  "ä"
+                  "(Just ä)"
                   &(str &(nth &(from-string "ööäö") 2))
-                  "UTF-8 indexing works"
+                  "UTF-8 indexing works I"
+    )
+    (assert-equal test
+                  &(Maybe.Nothing)
+                  &(nth &(from-string "") 2)
+                  "UTF-8 indexing works II"
+    )
+    (assert-equal test
+                  "ä"
+                  &(str &(unsafe-nth &(from-string "ööäö") 2))
+                  "UTF-8 unsafe indexing works"
     )
     (assert-equal test
                   "äÖ"

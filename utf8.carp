@@ -4,6 +4,8 @@
   (defn str [r]
     (String.from-chars (bytes r)))
 
+  (defn prn [r] (str r))
+
   (defn add-byte [r c]
     (set-bytes @r (Array.push-back @(Rune.bytes r) c)))
 
@@ -11,10 +13,15 @@
     (Array.length (bytes r)))
 
   (defn = [a b]
-    (= (bytes &a) (bytes &b)))
+    (= (bytes a) (bytes b)))
 
   (defn /= [a b]
     (not (= a b)))
+)
+
+(defmodule RuneCopy
+  (defn = [a b]
+    (= (Rune.bytes &a) (Rune.bytes &b)))
 )
 
 (deftype UTF8 [runes (Array Rune)])
@@ -36,7 +43,7 @@
              rune (Rune.init [])
              res []]
       (for [i 0 (Array.length &chs)]
-        (let-do [cur @(Array.nth &chs i)]
+        (let-do [cur @(Array.unsafe-nth &chs i)]
           (when (and (not (utf8-cont? cur)) (> (Rune.length &rune) 0))
             (do
               (set! res (Array.push-back res @&rune))
@@ -63,7 +70,11 @@
 
   (doc nth "Returns the nth rune from a UTF-8-encoded string.")
   (defn nth [u i]
-    @(Array.nth (runes u) i))
+    (Array.nth (runes u) i))
+
+  (doc unsafe-nth "Returns the nth rune from a UTF-8-encoded string unsafely.")
+  (defn unsafe-nth [u i]
+    @(Array.unsafe-nth (runes u) i))
 
   (doc length "Returns the length of a UTF-8-encoded string.")
   (defn length [u]

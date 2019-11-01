@@ -6,4 +6,5 @@
   (let-do [s (UTF8.from-string "hεllö")]
     (println* (length &s))
     (println* (length "hεllö"))
-    (println* &(nth &s 1))))
+    (println* &(nth &s 1))
+    (println* &(unsafe-nth &s 1))))

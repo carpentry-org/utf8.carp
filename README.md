@@ -11,7 +11,7 @@ The full documentation lives [here](https://veitheller.de/utf8/).
 You can obtain this library like so:
 
 ```clojure
-(load "git@github.com:carpentry-org/utf8.carp@0.0.1")
+(load "git@github.com:carpentry-org/utf8.carp@0.0.2")
 ```
 
 ## Usage
