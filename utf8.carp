@@ -108,59 +108,63 @@ I wonder what else I can do with these functions?")
                   @""
                   r))
 
-  (doc from-string "Creates an UTF-8 string from a regular string.")
+  (doc from-string "creates an UTF-8 string from a regular string.")
   (defn from-string [s]
     (init (to-runes s)))
 
-  (doc str "Creates a regular string from a UTF-8 string")
+  (doc str "creates a regular string from a UTF-8 string")
   (defn str [u]
     (from-runes (runes u)))
 
-  (doc nth "Returns the nth rune from a UTF-8-encoded string.")
-  (defn nth [u i]
-    (Array.nth (runes u) i))
+  (doc nth "returns the `n`th rune from a UTF-8-encoded string.")
+  (defn nth [u n]
+    (Array.nth (runes u) n))
 
-  (doc unsafe-nth "Returns the nth rune from a UTF-8-encoded string unsafely.")
-  (defn unsafe-nth [u i]
-    @(Array.unsafe-nth (runes u) i))
+  (doc unsafe-nth "returns the `n`th rune from a UTF-8-encoded string unsafely.")
+  (defn unsafe-nth [u n]
+    @(Array.unsafe-nth (runes u) n))
 
-  (doc length "Returns the length of a UTF-8-encoded string.")
+  (doc length "returns the length of a UTF-8-encoded string.")
   (defn length [u]
     (Array.length (runes u)))
 
-  (doc append "Appends two UTF-8-encoded strings.")
+  (doc append "appends two UTF-8-encoded strings.")
   (defn append [a b]
     (UTF8.init (Array.concat &[@(runes a) @(runes b)])))
 
-  (doc reverse "Reverses a UTF-8-encoded strings.")
+  (doc reverse "reverses a UTF-8-encoded string.")
   (defn reverse [u]
     (UTF8.init (Array.reverse @(runes u))))
 
-  (doc empty? "Checks whether a UTF-8-encoded string is empty.")
+  (doc empty? "checks whether a UTF-8-encoded string is empty.")
   (defn empty? [u]
     (= (length (the (Ref UTF8) u)) 0))
 
-  (doc substring "Returns a substring of the string from the index to the index b.")
-  (defn substring [u a b]
+  (doc slice "returns a substring of the string from the index `a` to the index
+`b`.")
+  (defn slice [u a b]
     (UTF8.init (Array.slice (runes u) a b)))
 
-  (doc prefix-string "Returns the first n chararacters of the string s.")
-  (defn prefix-string [u n]
+  (doc prefix "returns the first `n` chararacters of the string `u`.")
+  (defn prefix [u n]
     (UTF8.init (Array.prefix (runes u) n)))
 
-  (doc suffix-string "Returns the last n chararacters of the string s.")
-  (defn suffix-string [u n]
+  (doc suffix "returns the last `n` chararacters of the string `u`.")
+  (defn suffix [u n]
     (UTF8.init (Array.suffix (runes u) n)))
 
-  (doc starts-with? "Checks if the string u begins with the string sub.")
+  (doc starts-with? "checks if the string `u` begins with the string `sub`.")
   (sig starts-with? (Fn [(Ref UTF8) (Ref UTF8)] Bool))
-  (defn starts-with? [sub s]
-    (= sub &(UTF8.prefix-string s (length sub))))
+  (defn starts-with? [u sub]
+    (let [ls (length sub)]
+      (and (>= (length u) ls) (= sub &(UTF8.prefix u ls)))))
 
-  (doc ends-with? "Checks if the string u ends with the string sub.")
+  (doc ends-with? "checks if the string `u` ends with the string `sub`.")
   (sig ends-with? (Fn [(Ref UTF8) (Ref UTF8)] Bool))
-  (defn ends-with? [sub s]
-    (= sub &(UTF8.suffix-string s (- (length s) (length sub)))))
+  (defn ends-with? [u sub]
+    (let [lu (length u)
+          ls (length sub)]
+      (and (>= lu ls) (= sub &(UTF8.suffix u (- lu ls))))))
 
   (doc zero "Returns the empty string.")
   (defn zero [] (the UTF8 (from-string "")))

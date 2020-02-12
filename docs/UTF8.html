@@ -93,7 +93,7 @@ in bytes! Quite delicious!</p>
                     (append a b)
                 </pre>
                 <p class="doc">
-                    <p>Appends two UTF-8-encoded strings.</p>
+                    <p>appends two UTF-8-encoded strings.</p>
 
                 </p>
             </div>
@@ -133,7 +133,7 @@ in bytes! Quite delicious!</p>
                     (empty? u)
                 </pre>
                 <p class="doc">
-                    <p>Checks whether a UTF-8-encoded string is empty.</p>
+                    <p>checks whether a UTF-8-encoded string is empty.</p>
 
                 </p>
             </div>
@@ -150,10 +150,10 @@ in bytes! Quite delicious!</p>
                     (λ [(Ref UTF8 a), (Ref UTF8 b)] Bool)
                 </p>
                 <pre class="args">
-                    (ends-with? sub s)
+                    (ends-with? u sub)
                 </pre>
                 <p class="doc">
-                    <p>Checks if the string u ends with the string sub.</p>
+                    <p>checks if the string <code>u</code> ends with the string <code>sub</code>.</p>
 
                 </p>
             </div>
@@ -173,7 +173,7 @@ in bytes! Quite delicious!</p>
                     (from-string s)
                 </pre>
                 <p class="doc">
-                    <p>Creates an UTF-8 string from a regular string.</p>
+                    <p>creates an UTF-8 string from a regular string.</p>
 
                 </p>
             </div>
@@ -213,7 +213,7 @@ in bytes! Quite delicious!</p>
                     (length u)
                 </pre>
                 <p class="doc">
-                    <p>Returns the length of a UTF-8-encoded string.</p>
+                    <p>returns the length of a UTF-8-encoded string.</p>
 
                 </p>
             </div>
@@ -230,17 +230,17 @@ in bytes! Quite delicious!</p>
                     (λ [(Ref UTF8 a), Int] (Maybe Rune))
                 </p>
                 <pre class="args">
-                    (nth u i)
+                    (nth u n)
                 </pre>
                 <p class="doc">
-                    <p>Returns the nth rune from a UTF-8-encoded string.</p>
+                    <p>returns the <code>n</code>th rune from a UTF-8-encoded string.</p>
 
                 </p>
             </div>
             <div class="binder">
-                <a class="anchor" href="#prefix-string">
-                    <h3 id="prefix-string">
-                        prefix-string
+                <a class="anchor" href="#prefix">
+                    <h3 id="prefix">
+                        prefix
                     </h3>
                 </a>
                 <div class="description">
@@ -250,10 +250,10 @@ in bytes! Quite delicious!</p>
                     (λ [(Ref UTF8 a), Int] UTF8)
                 </p>
                 <pre class="args">
-                    (prefix-string u n)
+                    (prefix u n)
                 </pre>
                 <p class="doc">
-                    <p>Returns the first n chararacters of the string s.</p>
+                    <p>returns the first <code>n</code> chararacters of the string <code>u</code>.</p>
 
                 </p>
             </div>
@@ -293,7 +293,7 @@ in bytes! Quite delicious!</p>
                     (reverse u)
                 </pre>
                 <p class="doc">
-                    <p>Reverses a UTF-8-encoded strings.</p>
+                    <p>reverses a UTF-8-encoded string.</p>
 
                 </p>
             </div>
@@ -358,6 +358,27 @@ in bytes! Quite delicious!</p>
                 </p>
             </div>
             <div class="binder">
+                <a class="anchor" href="#slice">
+                    <h3 id="slice">
+                        slice
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref UTF8 a), Int, Int] UTF8)
+                </p>
+                <pre class="args">
+                    (slice u a b)
+                </pre>
+                <p class="doc">
+                    <p>returns a substring of the string from the index <code>a</code> to the index
+<code>b</code>.</p>
+
+                </p>
+            </div>
+            <div class="binder">
                 <a class="anchor" href="#starts-with?">
                     <h3 id="starts-with?">
                         starts-with?
@@ -370,10 +391,10 @@ in bytes! Quite delicious!</p>
                     (λ [(Ref UTF8 a), (Ref UTF8 b)] Bool)
                 </p>
                 <pre class="args">
-                    (starts-with? sub s)
+                    (starts-with? u sub)
                 </pre>
                 <p class="doc">
-                    <p>Checks if the string u begins with the string sub.</p>
+                    <p>checks if the string <code>u</code> begins with the string <code>sub</code>.</p>
 
                 </p>
             </div>
@@ -393,34 +414,14 @@ in bytes! Quite delicious!</p>
                     (str u)
                 </pre>
                 <p class="doc">
-                    <p>Creates a regular string from a UTF-8 string</p>
+                    <p>creates a regular string from a UTF-8 string</p>
 
                 </p>
             </div>
             <div class="binder">
-                <a class="anchor" href="#substring">
-                    <h3 id="substring">
-                        substring
-                    </h3>
-                </a>
-                <div class="description">
-                    defn
-                </div>
-                <p class="sig">
-                    (λ [(Ref UTF8 a), Int, Int] UTF8)
-                </p>
-                <pre class="args">
-                    (substring u a b)
-                </pre>
-                <p class="doc">
-                    <p>Returns a substring of the string from the index to the index b.</p>
-
-                </p>
-            </div>
-            <div class="binder">
-                <a class="anchor" href="#suffix-string">
-                    <h3 id="suffix-string">
-                        suffix-string
+                <a class="anchor" href="#suffix">
+                    <h3 id="suffix">
+                        suffix
                     </h3>
                 </a>
                 <div class="description">
@@ -430,10 +431,10 @@ in bytes! Quite delicious!</p>
                     (λ [(Ref UTF8 a), Int] UTF8)
                 </p>
                 <pre class="args">
-                    (suffix-string u n)
+                    (suffix u n)
                 </pre>
                 <p class="doc">
-                    <p>Returns the last n chararacters of the string s.</p>
+                    <p>returns the last <code>n</code> chararacters of the string <code>u</code>.</p>
 
                 </p>
             </div>
@@ -450,10 +451,10 @@ in bytes! Quite delicious!</p>
                     (λ [(Ref UTF8 a), Int] Rune)
                 </p>
                 <pre class="args">
-                    (unsafe-nth u i)
+                    (unsafe-nth u n)
                 </pre>
                 <p class="doc">
-                    <p>Returns the nth rune from a UTF-8-encoded string unsafely.</p>
+                    <p>returns the <code>n</code>th rune from a UTF-8-encoded string unsafely.</p>
 
                 </p>
             </div>

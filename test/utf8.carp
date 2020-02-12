@@ -53,17 +53,17 @@
     )
     (assert-equal test
                   "rüm"
-                  &(str &(UTF8.substring &(from-string "perümpor") 2 5))
+                  &(str &(UTF8.slice &(from-string "perümpor") 2 5))
                   "UTF-8 substring works"
     )
     (assert-equal test
                   "rüm"
-                  &(str &(UTF8.suffix-string &(from-string "perüm") 2))
+                  &(str &(UTF8.suffix &(from-string "perüm") 2))
                   "UTF-8 suffix-string works"
     )
     (assert-equal test
                   "rüm"
-                  &(str &(UTF8.prefix-string &(from-string "rümpor") 3))
+                  &(str &(UTF8.prefix &(from-string "rümpor") 3))
                   "UTF-8 prefix-string works"
     )
     (assert-equal test
@@ -73,12 +73,12 @@
     )
     (assert-equal test
                   true
-                  (UTF8.starts-with? &(UTF8.from-string "öläm") &(UTF8.from-string "ölämpö"))
+                  (UTF8.starts-with? &(UTF8.from-string "ölämpö") &(UTF8.from-string "öläm"))
                   "UTF-8 starts-with check works"
     )
     (assert-equal test
                   true
-                  (UTF8.ends-with? &(UTF8.from-string "öläm") &(UTF8.from-string "pööläm"))
+                  (UTF8.ends-with? &(UTF8.from-string "pööläm") &(UTF8.from-string "öläm"))
                   "UTF-8 ends-with check works"
     )
   )
