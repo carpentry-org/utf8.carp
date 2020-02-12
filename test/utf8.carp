@@ -54,17 +54,17 @@
     (assert-equal test
                   "rüm"
                   &(str &(UTF8.slice &(from-string "perümpor") 2 5))
-                  "UTF-8 substring works"
+                  "UTF-8 slice works"
     )
     (assert-equal test
                   "rüm"
                   &(str &(UTF8.suffix &(from-string "perüm") 2))
-                  "UTF-8 suffix-string works"
+                  "UTF-8 suffix works"
     )
     (assert-equal test
                   "rüm"
                   &(str &(UTF8.prefix &(from-string "rümpor") 3))
-                  "UTF-8 prefix-string works"
+                  "UTF-8 prefix works"
     )
     (assert-equal test
                   ""
