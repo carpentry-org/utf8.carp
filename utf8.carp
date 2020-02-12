@@ -94,15 +94,15 @@
 
   (doc substring "Returns a substring of the string from the index to the index b.")
   (defn substring [u a b]
-    (UTF8.init (Array.subarray (runes u) a b)))
+    (UTF8.init (Array.slice (runes u) a b)))
 
   (doc prefix-string "Returns the first n chararacters of the string s.")
   (defn prefix-string [u n]
-    (UTF8.init (Array.prefix-array (runes u) n)))
+    (UTF8.init (Array.prefix (runes u) n)))
 
   (doc suffix-string "Returns the last n chararacters of the string s.")
   (defn suffix-string [u n]
-    (UTF8.init (Array.suffix-array (runes u) n)))
+    (UTF8.init (Array.suffix (runes u) n)))
 
   (doc starts-with? "Checks if the string u begins with the string sub.")
   (sig starts-with? (Fn [(Ref UTF8) (Ref UTF8)] Bool))
