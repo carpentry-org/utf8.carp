@@ -33,7 +33,7 @@ respecting unicode runes instead of just having bytes.
 You can obtain this library like so:
 
 ```clojure
-(load \"git@github.com:carpentry-org/utf8.carp@0.0.3\")
+(load \"git@github.com:carpentry-org/utf8.carp@0.0.4\")
 ```
 
 ## Usage
