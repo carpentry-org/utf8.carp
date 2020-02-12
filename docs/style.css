@@ -1,9 +1,14 @@
 html {
     font-family: "Helvetica", sans-serif;
+    font-size: 16px;
 }
 
 a {
-    color: #f00;
+    color: #000;
+}
+
+.logo {
+    display: none;
 }
 
 ul {
@@ -12,30 +17,30 @@ ul {
     line-height: 1.4em;
 }
 
-.title {
-    font-size: 1.5em;
+.module-description {
+    margin-bottom: 3em;
 }
 
 .content {
     margin: 3em auto auto auto;
     width: 80%;
-    max-width: 800px;
+    max-width: 610px;
+    min-width: 400px
 }
 
-.teaser {
-  margin-top: 0;
-  margin-bottom: 2em;
-  max-width: 600px;
-  text-align: justify;
+h1 {
+    margin-bottom: 1em;
+    font-weight: 400;
 }
 
-.anchor {
-    color: #000;
-    text-decoration: none;
+h2 {
+    font-weight: 400;
+    margin-bottom: 0em;
 }
 
-.anchor:hover {
-    text-decoration: underline;
+h3 {
+    margin: 0em;
+    font-weight: 400;
 }
 
 .binder {
@@ -44,10 +49,24 @@ ul {
 
 .sig {
     font-family: "Hasklig", "Lucida Console", monospace;
+    margin: 0.5em 0em 0.5em 0em;
 }
 
-.doc {
-    /* font-style: italic; */
+.args {
+    background-color: #eee;
+    display: inline-block;
+    white-space: normal;
+    margin: 0;
+    margin-bottom: 1em;
+}
+
+code {
+    background-color: #eee;
+}
+
+pre {
+    background-color:  #eee;
+    overflow-y: scroll;
 }
 
 .description {
@@ -88,3 +107,4 @@ ul {
         padding: 0px;
     }
 }
+.title, .index { display: none; }

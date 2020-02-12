@@ -1,8 +1,12 @@
 (load "utf8.carp")
 
-(defdynamic gendocs []
+(defndynamic gendocs []
        (do
-         (Project.config "title" "UTF-8")
+         (Project.config "title" "utf8")
+         (Project.config "docs-directory" "./docs/")
+         (Project.config "docs-logo" "")
+         (Project.config "docs-styling" "style.css")
+         (Project.config "docs-generate-index" false)
          (save-docs UTF8)))
 
 (gendocs)

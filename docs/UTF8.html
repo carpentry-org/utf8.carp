@@ -1,1 +1,502 @@
-<html><head><meta charset="UTF-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><link href="carp_style.css" rel="stylesheet"></head><body><div class="content"><h1>UTF8</h1><p class="teaser">This module enables you to create and manage UTF-8 encoded strings. Instead of strings, you use UTF-8 objects, and instead of chars, you use Runes. Runes can be stringified normally, and can be asked for their bytes. UTF-8 strings try to mimic the behavior of regular old ASCII strings.</p><div class="binder"><a href="#=" class="anchor"><h3 id="=">=</h3></a><div class="description">defn</div><p class="sig">(λ [(Ref UTF8), (Ref UTF8)] Bool)</p><p class="doc"></p></div><div class="binder"><a href="#append" class="anchor"><h3 id="append">append</h3></a><div class="description">defn</div><p class="sig">(λ [(Ref UTF8), (Ref UTF8)] UTF8)</p><p class="doc">Appends two UTF-8-encoded strings.</p></div><div class="binder"><a href="#copy" class="anchor"><h3 id="copy">copy</h3></a><div class="description">instantiate</div><p class="sig">(λ [(Ref UTF8)] UTF8)</p><p class="doc"></p></div><div class="binder"><a href="#empty?" class="anchor"><h3 id="empty?">empty?</h3></a><div class="description">defn</div><p class="sig">(λ [(Ref UTF8)] Bool)</p><p class="doc">Checks whether a UTF-8-encoded string is empty.</p></div><div class="binder"><a href="#ends-with?" class="anchor"><h3 id="ends-with?">ends-with?</h3></a><div class="description">defn</div><p class="sig">(λ [(Ref UTF8), (Ref UTF8)] Bool)</p><p class="doc">Checks if the string u ends with the string sub.</p></div><div class="binder"><a href="#from-string" class="anchor"><h3 id="from-string">from-string</h3></a><div class="description">defn</div><p class="sig">(λ [&amp;String] UTF8)</p><p class="doc">Creates an UTF-8 string from a regular string.</p></div><div class="binder"><a href="#init" class="anchor"><h3 id="init">init</h3></a><div class="description">instantiate</div><p class="sig">(λ [(Array Rune)] UTF8)</p><p class="doc"></p></div><div class="binder"><a href="#length" class="anchor"><h3 id="length">length</h3></a><div class="description">defn</div><p class="sig">(λ [(Ref UTF8)] Int)</p><p class="doc">Returns the length of a UTF-8-encoded string.</p></div><div class="binder"><a href="#nth" class="anchor"><h3 id="nth">nth</h3></a><div class="description">defn</div><p class="sig">(λ [(Ref UTF8), Int] Rune)</p><p class="doc">Returns the nth rune from a UTF-8-encoded string.</p></div><div class="binder"><a href="#prefix-string" class="anchor"><h3 id="prefix-string">prefix-string</h3></a><div class="description">defn</div><p class="sig">(λ [(Ref UTF8), Int] UTF8)</p><p class="doc">Returns the first n chararacters of the string s.</p></div><div class="binder"><a href="#prn" class="anchor"><h3 id="prn">prn</h3></a><div class="description">instantiate</div><p class="sig">(λ [(Ref UTF8)] String)</p><p class="doc"></p></div><div class="binder"><a href="#reverse" class="anchor"><h3 id="reverse">reverse</h3></a><div class="description">defn</div><p class="sig">(λ [(Ref UTF8)] UTF8)</p><p class="doc">Reverses a UTF-8-encoded strings.</p></div><div class="binder"><a href="#runes" class="anchor"><h3 id="runes">runes</h3></a><div class="description">instantiate</div><p class="sig">(λ [(Ref UTF8)] (Ref (Array Rune)))</p><p class="doc"></p></div><div class="binder"><a href="#set-runes" class="anchor"><h3 id="set-runes">set-runes</h3></a><div class="description">instantiate</div><p class="sig">(λ [UTF8, (Array Rune)] UTF8)</p><p class="doc"></p></div><div class="binder"><a href="#set-runes!" class="anchor"><h3 id="set-runes!">set-runes!</h3></a><div class="description">instantiate</div><p class="sig">(λ [(Ref UTF8), (Array Rune)] ())</p><p class="doc"></p></div><div class="binder"><a href="#starts-with?" class="anchor"><h3 id="starts-with?">starts-with?</h3></a><div class="description">defn</div><p class="sig">(λ [(Ref UTF8), (Ref UTF8)] Bool)</p><p class="doc">Checks if the string u begins with the string sub.</p></div><div class="binder"><a href="#str" class="anchor"><h3 id="str">str</h3></a><div class="description">defn</div><p class="sig">(λ [(Ref UTF8)] String)</p><p class="doc">Creates a regular string from a UTF-8 string</p></div><div class="binder"><a href="#substring" class="anchor"><h3 id="substring">substring</h3></a><div class="description">defn</div><p class="sig">(λ [(Ref UTF8), Int, Int] UTF8)</p><p class="doc">Returns a substring of the string from the index to the index b.</p></div><div class="binder"><a href="#suffix-string" class="anchor"><h3 id="suffix-string">suffix-string</h3></a><div class="description">defn</div><p class="sig">(λ [(Ref UTF8), Int] UTF8)</p><p class="doc">Returns the last n chararacters of the string s.</p></div><div class="binder"><a href="#update-runes" class="anchor"><h3 id="update-runes">update-runes</h3></a><div class="description">instantiate</div><p class="sig">(λ [UTF8, (λ [(Array Rune)] (Array Rune))] UTF8)</p><p class="doc"></p></div><div class="binder"><a href="#zero" class="anchor"><h3 id="zero">zero</h3></a><div class="description">defn</div><p class="sig">(λ [] UTF8)</p><p class="doc">Returns the empty string.</p></div></div></body></html>
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div class="content">
+            <div class="logo">
+                <a href="http://github.com/carp-lang/Carp">
+                    <img src="logo.png">
+                </a>
+                <div class="title">
+                    utf8
+                </div>
+                <div class="index">
+                    <ul>
+                        <li>
+                            <a href="UTF8.html">
+                                UTF8
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <h1>
+                UTF8
+            </h1>
+            <div class="module-description">
+                <p>is a simple UTF-8 package for Carp. This nascent string replacement
+type allows you to use many of the functions you know from Carp strings while
+respecting unicode runes instead of just having bytes.</p>
+<h2>Installation</h2>
+<p>You can obtain this library like so:</p>
+<pre><code class="language-clojure">(load &quot;git@github.com:carpentry-org/utf8.carp@0.0.3&quot;)
+</code></pre>
+<h2>Usage</h2>
+<p>First, let’s define a UTF-8 string to work with!</p>
+<pre><code class="language-clojure">(let [s (UTF8.from-string &quot;hεllö&quot;)]
+</code></pre>
+<p>That’s a cute, short string! Hm, I wonder how long it is!</p>
+<pre><code class="language-clojure">(length s) ; =&gt; 5
+</code></pre>
+<p>That’s surprising! So the length is the actual number of runes, and not the
+number of bytes, you say? Most curious!</p>
+<p>You know what, I want to see this second character there up close! It somehow
+looks all Greek to me!</p>
+<pre><code class="language-clojure">(nth s 1) ; =&gt; ε
+</code></pre>
+<p>Hm, so this is what that looks like, huh? Interesting. And what’s its type?</p>
+<pre><code class="language-clojure">(type UTF8.nth) ; =&gt; UTF8.nth : (λ [(Ref UTF8), Int] Rune)
+</code></pre>
+<p>So, it’s called a <code>Rune</code>, huh? Hm, they don’t seem to be super interesting, but
+I seem to be able to compare them and stringify them, and even take their length
+in bytes! Quite delicious!</p>
+<p>I wonder what else I can do with these functions?</p>
+
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#=">
+                    <h3 id="=">
+                        =
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref UTF8 a), (Ref UTF8 a)] Bool)
+                </p>
+                <pre class="args">
+                    (= a b)
+                </pre>
+                <p class="doc">
+                    
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#append">
+                    <h3 id="append">
+                        append
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref UTF8 a), (Ref UTF8 b)] UTF8)
+                </p>
+                <pre class="args">
+                    (append a b)
+                </pre>
+                <p class="doc">
+                    <p>Appends two UTF-8-encoded strings.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#copy">
+                    <h3 id="copy">
+                        copy
+                    </h3>
+                </a>
+                <div class="description">
+                    instantiate
+                </div>
+                <p class="sig">
+                    (λ [(Ref UTF8 a)] UTF8)
+                </p>
+                <span>
+                    
+                </span>
+                <p class="doc">
+                    <p>copies a <code>UTF8</code>.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#empty?">
+                    <h3 id="empty?">
+                        empty?
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref UTF8 a)] Bool)
+                </p>
+                <pre class="args">
+                    (empty? u)
+                </pre>
+                <p class="doc">
+                    <p>Checks whether a UTF-8-encoded string is empty.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#ends-with?">
+                    <h3 id="ends-with?">
+                        ends-with?
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref UTF8 a), (Ref UTF8 b)] Bool)
+                </p>
+                <pre class="args">
+                    (ends-with? sub s)
+                </pre>
+                <p class="doc">
+                    <p>Checks if the string u ends with the string sub.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#from-string">
+                    <h3 id="from-string">
+                        from-string
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref String a)] UTF8)
+                </p>
+                <pre class="args">
+                    (from-string s)
+                </pre>
+                <p class="doc">
+                    <p>Creates an UTF-8 string from a regular string.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#init">
+                    <h3 id="init">
+                        init
+                    </h3>
+                </a>
+                <div class="description">
+                    instantiate
+                </div>
+                <p class="sig">
+                    (λ [(Array Rune)] UTF8)
+                </p>
+                <span>
+                    
+                </span>
+                <p class="doc">
+                    <p>creates a <code>UTF8</code>.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#length">
+                    <h3 id="length">
+                        length
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref UTF8 a)] Int)
+                </p>
+                <pre class="args">
+                    (length u)
+                </pre>
+                <p class="doc">
+                    <p>Returns the length of a UTF-8-encoded string.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#nth">
+                    <h3 id="nth">
+                        nth
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref UTF8 a), Int] (Maybe Rune))
+                </p>
+                <pre class="args">
+                    (nth u i)
+                </pre>
+                <p class="doc">
+                    <p>Returns the nth rune from a UTF-8-encoded string.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#prefix-string">
+                    <h3 id="prefix-string">
+                        prefix-string
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref UTF8 a), Int] UTF8)
+                </p>
+                <pre class="args">
+                    (prefix-string u n)
+                </pre>
+                <p class="doc">
+                    <p>Returns the first n chararacters of the string s.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#prn">
+                    <h3 id="prn">
+                        prn
+                    </h3>
+                </a>
+                <div class="description">
+                    instantiate
+                </div>
+                <p class="sig">
+                    (λ [(Ref UTF8 a)] String)
+                </p>
+                <span>
+                    
+                </span>
+                <p class="doc">
+                    <p>converts a <code>UTF8</code> to a string.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#reverse">
+                    <h3 id="reverse">
+                        reverse
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref UTF8 a)] UTF8)
+                </p>
+                <pre class="args">
+                    (reverse u)
+                </pre>
+                <p class="doc">
+                    <p>Reverses a UTF-8-encoded strings.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#runes">
+                    <h3 id="runes">
+                        runes
+                    </h3>
+                </a>
+                <div class="description">
+                    instantiate
+                </div>
+                <p class="sig">
+                    (λ [(Ref UTF8 a)] (Ref (Array Rune) a))
+                </p>
+                <span>
+                    
+                </span>
+                <p class="doc">
+                    <p>gets the <code>runes</code> property of a <code>UTF8</code>.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#set-runes">
+                    <h3 id="set-runes">
+                        set-runes
+                    </h3>
+                </a>
+                <div class="description">
+                    instantiate
+                </div>
+                <p class="sig">
+                    (λ [UTF8, (Array Rune)] UTF8)
+                </p>
+                <span>
+                    
+                </span>
+                <p class="doc">
+                    <p>sets the <code>runes</code> property of a <code>UTF8</code>.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#set-runes!">
+                    <h3 id="set-runes!">
+                        set-runes!
+                    </h3>
+                </a>
+                <div class="description">
+                    instantiate
+                </div>
+                <p class="sig">
+                    (λ [(Ref UTF8 a), (Array Rune)] ())
+                </p>
+                <span>
+                    
+                </span>
+                <p class="doc">
+                    <p>sets the <code>runes</code> property of a <code>UTF8</code> in place.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#starts-with?">
+                    <h3 id="starts-with?">
+                        starts-with?
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref UTF8 a), (Ref UTF8 b)] Bool)
+                </p>
+                <pre class="args">
+                    (starts-with? sub s)
+                </pre>
+                <p class="doc">
+                    <p>Checks if the string u begins with the string sub.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#str">
+                    <h3 id="str">
+                        str
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref UTF8 a)] String)
+                </p>
+                <pre class="args">
+                    (str u)
+                </pre>
+                <p class="doc">
+                    <p>Creates a regular string from a UTF-8 string</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#substring">
+                    <h3 id="substring">
+                        substring
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref UTF8 a), Int, Int] UTF8)
+                </p>
+                <pre class="args">
+                    (substring u a b)
+                </pre>
+                <p class="doc">
+                    <p>Returns a substring of the string from the index to the index b.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#suffix-string">
+                    <h3 id="suffix-string">
+                        suffix-string
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref UTF8 a), Int] UTF8)
+                </p>
+                <pre class="args">
+                    (suffix-string u n)
+                </pre>
+                <p class="doc">
+                    <p>Returns the last n chararacters of the string s.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#unsafe-nth">
+                    <h3 id="unsafe-nth">
+                        unsafe-nth
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [(Ref UTF8 a), Int] Rune)
+                </p>
+                <pre class="args">
+                    (unsafe-nth u i)
+                </pre>
+                <p class="doc">
+                    <p>Returns the nth rune from a UTF-8-encoded string unsafely.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#update-runes">
+                    <h3 id="update-runes">
+                        update-runes
+                    </h3>
+                </a>
+                <div class="description">
+                    instantiate
+                </div>
+                <p class="sig">
+                    (λ [UTF8, (Ref (λ [(Array Rune)] (Array Rune) a) b)] UTF8)
+                </p>
+                <span>
+                    
+                </span>
+                <p class="doc">
+                    <p>updates the <code>runes</code> property of a <code>UTF8</code> using a function <code>f</code>.</p>
+
+                </p>
+            </div>
+            <div class="binder">
+                <a class="anchor" href="#zero">
+                    <h3 id="zero">
+                        zero
+                    </h3>
+                </a>
+                <div class="description">
+                    defn
+                </div>
+                <p class="sig">
+                    (λ [] UTF8)
+                </p>
+                <pre class="args">
+                    (zero)
+                </pre>
+                <p class="doc">
+                    <p>Returns the empty string.</p>
+
+                </p>
+            </div>
+        </div>
+    </body>
+</html>
