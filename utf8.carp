@@ -4,7 +4,7 @@
   (defn str [r]
     (String.from-chars (bytes r)))
 
-  (defn prn [r] (str r))
+  (defn prn [r] (str (the (Ref Rune) r)))
 
   (defn add-byte [r c]
     (set-bytes @r (Array.push-back @(Rune.bytes r) c)))
