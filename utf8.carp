@@ -3,8 +3,10 @@
 (defmodule Rune
   (defn str [r]
     (String.from-chars (bytes r)))
+  (implements str Rune.str)
 
   (defn prn [r] (str (the (Ref Rune) r)))
+  (implements prn Rune.prn)
 
   (defn add-byte [r c]
     (set-bytes @r (Array.push-back @(Rune.bytes r) c)))
@@ -14,14 +16,13 @@
 
   (defn = [a b]
     (= (bytes a) (bytes b)))
-
-  (defn /= [a b]
-    (not (= a b)))
+  (implements = Rune.=)
 )
 
 (defmodule RuneCopy
   (defn = [a b]
     (= (Rune.bytes &a) (Rune.bytes &b)))
+  (implements = RuneCopy.=)
 )
 
 (doc UTF8 "is a simple UTF-8 package for Carp. This nascent string replacement
@@ -77,6 +78,7 @@ I wonder what else I can do with these functions?")
 (defmodule UTF8
   (defn = [a b]
     (= (runes a) (runes b)))
+  (implements = UTF8.=)
 
   (hidden utf8-cont?)
   (private utf8-cont?)
@@ -111,10 +113,12 @@ I wonder what else I can do with these functions?")
   (doc from-string "creates an UTF-8 string from a regular string.")
   (defn from-string [s]
     (init (to-runes s)))
+  (implements from-string UTF8.from-string)
 
   (doc str "creates a regular string from a UTF-8 string")
   (defn str [u]
     (from-runes (runes u)))
+  (implements str UTF8.str)
 
   (doc nth "returns the `n`th rune from a UTF-8-encoded string.")
   (defn nth [u n]
@@ -144,6 +148,7 @@ I wonder what else I can do with these functions?")
 `b`.")
   (defn slice [u a b]
     (UTF8.init (Array.slice (runes u) a b)))
+  (implements slice UTF8.slice)
 
   (doc prefix "returns the first `n` chararacters of the string `u`.")
   (defn prefix [u n]
@@ -168,4 +173,5 @@ I wonder what else I can do with these functions?")
 
   (doc zero "Returns the empty string.")
   (defn zero [] (the UTF8 (from-string "")))
+  (implements zero UTF8.zero)
 )
