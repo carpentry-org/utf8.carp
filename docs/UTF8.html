@@ -4,10 +4,27 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-        <link rel="stylesheet" href="carp_style.css">
+        <link rel="stylesheet" href="../style.css">
     </head>
     <body>
         <div class="content">
+            <div class="logo">
+                <a href="">
+                    <img src="">
+                </a>
+                <div class="title">
+                    utf8
+                </div>
+                <div class="index">
+                    <ul>
+                        <li>
+                            <a href="UTF8.html">
+                                UTF8
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
             <h1>
                 UTF8
             </h1>
@@ -51,7 +68,7 @@ in bytes! Quite delicious!</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [(Ref UTF8 a), (Ref UTF8 a)] Bool)
+                    (Fn [(Ref UTF8 a), (Ref UTF8 a)] Bool)
                 </p>
                 <pre class="args">
                     (= a b)
@@ -70,7 +87,7 @@ in bytes! Quite delicious!</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [(Ref UTF8 a), (Ref UTF8 b)] UTF8)
+                    (Fn [(Ref UTF8 a), (Ref UTF8 b)] UTF8)
                 </p>
                 <pre class="args">
                     (append a b)
@@ -90,7 +107,7 @@ in bytes! Quite delicious!</p>
                     instantiate
                 </div>
                 <p class="sig">
-                    (λ [(Ref UTF8 a)] UTF8)
+                    (Fn [(Ref UTF8 a)] UTF8)
                 </p>
                 <span>
                     
@@ -110,7 +127,7 @@ in bytes! Quite delicious!</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [(Ref UTF8 a)] Bool)
+                    (Fn [(Ref UTF8 a)] Bool)
                 </p>
                 <pre class="args">
                     (empty? u)
@@ -130,7 +147,7 @@ in bytes! Quite delicious!</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [(Ref UTF8 a), (Ref UTF8 b)] Bool)
+                    (Fn [(Ref UTF8 a), (Ref UTF8 b)] Bool)
                 </p>
                 <pre class="args">
                     (ends-with? u sub)
@@ -150,7 +167,7 @@ in bytes! Quite delicious!</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [(Ref String a)] UTF8)
+                    (Fn [(Ref String a)] UTF8)
                 </p>
                 <pre class="args">
                     (from-string s)
@@ -170,7 +187,7 @@ in bytes! Quite delicious!</p>
                     instantiate
                 </div>
                 <p class="sig">
-                    (λ [(Array Rune)] UTF8)
+                    (Fn [(Array Rune)] UTF8)
                 </p>
                 <span>
                     
@@ -190,7 +207,7 @@ in bytes! Quite delicious!</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [(Ref UTF8 a)] Int)
+                    (Fn [(Ref UTF8 a)] Int)
                 </p>
                 <pre class="args">
                     (length u)
@@ -210,7 +227,7 @@ in bytes! Quite delicious!</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [(Ref UTF8 a), Int] (Maybe Rune))
+                    (Fn [(Ref UTF8 a), Int] (Maybe Rune))
                 </p>
                 <pre class="args">
                     (nth u n)
@@ -230,7 +247,7 @@ in bytes! Quite delicious!</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [(Ref UTF8 a), Int] UTF8)
+                    (Fn [(Ref UTF8 a), Int] UTF8)
                 </p>
                 <pre class="args">
                     (prefix u n)
@@ -250,7 +267,7 @@ in bytes! Quite delicious!</p>
                     instantiate
                 </div>
                 <p class="sig">
-                    (λ [(Ref UTF8 a)] String)
+                    (Fn [(Ref UTF8 a)] String)
                 </p>
                 <span>
                     
@@ -270,7 +287,7 @@ in bytes! Quite delicious!</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [(Ref UTF8 a)] UTF8)
+                    (Fn [(Ref UTF8 a)] UTF8)
                 </p>
                 <pre class="args">
                     (reverse u)
@@ -290,7 +307,7 @@ in bytes! Quite delicious!</p>
                     instantiate
                 </div>
                 <p class="sig">
-                    (λ [(Ref UTF8 a)] (Ref (Array Rune) a))
+                    (Fn [(Ref UTF8 a)] (Ref (Array Rune) a))
                 </p>
                 <span>
                     
@@ -310,7 +327,7 @@ in bytes! Quite delicious!</p>
                     instantiate
                 </div>
                 <p class="sig">
-                    (λ [UTF8, (Array Rune)] UTF8)
+                    (Fn [UTF8, (Array Rune)] UTF8)
                 </p>
                 <span>
                     
@@ -330,7 +347,7 @@ in bytes! Quite delicious!</p>
                     instantiate
                 </div>
                 <p class="sig">
-                    (λ [(Ref UTF8 a), (Array Rune)] ())
+                    (Fn [(Ref UTF8 a), (Array Rune)] ())
                 </p>
                 <span>
                     
@@ -350,7 +367,7 @@ in bytes! Quite delicious!</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [(Ref UTF8 a), Int, Int] UTF8)
+                    (Fn [(Ref UTF8 a), Int, Int] UTF8)
                 </p>
                 <pre class="args">
                     (slice u a b)
@@ -371,7 +388,7 @@ in bytes! Quite delicious!</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [(Ref UTF8 a), (Ref UTF8 b)] Bool)
+                    (Fn [(Ref UTF8 a), (Ref UTF8 b)] Bool)
                 </p>
                 <pre class="args">
                     (starts-with? u sub)
@@ -391,7 +408,7 @@ in bytes! Quite delicious!</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [(Ref UTF8 a)] String)
+                    (Fn [(Ref UTF8 a)] String)
                 </p>
                 <pre class="args">
                     (str u)
@@ -411,7 +428,7 @@ in bytes! Quite delicious!</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [(Ref UTF8 a), Int] UTF8)
+                    (Fn [(Ref UTF8 a), Int] UTF8)
                 </p>
                 <pre class="args">
                     (suffix u n)
@@ -431,7 +448,7 @@ in bytes! Quite delicious!</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [(Ref UTF8 a), Int] Rune)
+                    (Fn [(Ref UTF8 a), Int] Rune)
                 </p>
                 <pre class="args">
                     (unsafe-nth u n)
@@ -451,7 +468,7 @@ in bytes! Quite delicious!</p>
                     instantiate
                 </div>
                 <p class="sig">
-                    (λ [UTF8, (Ref (λ [(Array Rune)] (Array Rune) a) b)] UTF8)
+                    (Fn [UTF8, (Ref (Fn [(Array Rune)] (Array Rune) a) b)] UTF8)
                 </p>
                 <span>
                     
@@ -471,7 +488,7 @@ in bytes! Quite delicious!</p>
                     defn
                 </div>
                 <p class="sig">
-                    (λ [] UTF8)
+                    (Fn [] UTF8)
                 </p>
                 <pre class="args">
                     (zero)
