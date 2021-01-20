@@ -1,4 +1,5 @@
 (deftype Rune [bytes (Array Char)])
+(derive Rune =)
 
 (defmodule Rune
   (defn str [r]
@@ -13,15 +14,11 @@
 
   (defn length [r]
     (Array.length (bytes r)))
-
-  (defn = [a b]
-    (= (bytes a) (bytes b)))
-  (implements = Rune.=)
 )
 
 (defmodule RuneCopy
   (defn = [a b]
-    (= (Rune.bytes &a) (Rune.bytes &b)))
+    (Rune.= &a &b))
   (implements = RuneCopy.=)
 )
 
