@@ -2,25 +2,17 @@
 (derive Rune =)
 
 (defmodule Rune
-  (defn str [r]
-    (String.from-chars (bytes r)))
+  (defn str [r] (String.from-chars (bytes r)))
   (implements str Rune.str)
 
   (defn prn [r] (str (the (Ref Rune) r)))
   (implements prn Rune.prn)
 
-  (defn add-byte [r c]
-    (set-bytes @r (Array.push-back @(Rune.bytes r) c)))
+  (defn add-byte [r c] (set-bytes @r (Array.push-back @(Rune.bytes r) c)))
 
-  (defn length [r]
-    (Array.length (bytes r)))
-)
+  (defn length [r] (Array.length (bytes r))))
 
-(defmodule RuneCopy
-  (defn = [a b]
-    (Rune.= &a &b))
-  (implements = RuneCopy.=)
-)
+(defmodule RuneCopy (defn = [a b] (Rune.= &a &b)) (implements = RuneCopy.=))
 
 (doc UTF8 "is a simple UTF-8 package for Carp. This nascent string replacement
 type allows you to use many of the functions you know from Carp strings while
@@ -73,15 +65,12 @@ I wonder what else I can do with these functions?")
 (deftype UTF8 [runes (Array Rune)])
 
 (defmodule UTF8
-  (defn = [a b]
-    (= (runes a) (runes b)))
+  (defn = [a b] (= (runes a) (runes b)))
   (implements = UTF8.=)
 
   (hidden utf8-cont?)
   (private utf8-cont?)
-  (defn utf8-cont? [c]
-    (let [i (Char.to-int c)]
-      (= 128 (Int.bit-and 192 i))))
+  (defn utf8-cont? [c] (let [i (Char.to-int c)] (= 128 (Int.bit-and 192 i))))
 
   (hidden to-runes)
   (private to-runes)
@@ -91,75 +80,62 @@ I wonder what else I can do with these functions?")
              res []]
       (for [i 0 (Array.length &chs)]
         (let-do [cur @(Array.unsafe-nth &chs i)]
-          (when (and (not (utf8-cont? cur)) (> (Rune.length &rune) 0))
-            (do
-              (set! res (Array.push-back res @&rune))
-              (set! rune (Rune.init []))))
+          (when-do (and (not (utf8-cont? cur)) (> (Rune.length &rune) 0))
+            (set! res (Array.push-back res @&rune))
+            (set! rune (Rune.init [])))
           (set! rune (Rune.add-byte &rune cur))))
-      (when (> (Rune.length &rune) 0)
-        (set! res (Array.push-back res rune)))
+      (when (> (Rune.length &rune) 0) (set! res (Array.push-back res rune)))
       res))
 
   (hidden from-runes)
   (private from-runes)
   (defn from-runes [r]
-    (Array.reduce &(fn [x y] (String.append &x &(from-chars (Rune.bytes y))))
-                  @""
-                  r))
+    (Array.reduce
+      &(fn [x y] (String.append &x &(from-chars (Rune.bytes y))))
+      @""
+      r))
 
   (doc from-string "creates an UTF-8 string from a regular string.")
-  (defn from-string [s]
-    (init (to-runes s)))
+  (defn from-string [s] (init (to-runes s)))
   (implements from-string UTF8.from-string)
 
   (doc str "creates a regular string from a UTF-8 string")
-  (defn str [u]
-    (from-runes (runes u)))
+  (defn str [u] (from-runes (runes u)))
   (implements str UTF8.str)
 
   (doc nth "returns the `n`th rune from a UTF-8-encoded string.")
-  (defn nth [u n]
-    (Array.nth (runes u) n))
+  (defn nth [u n] (Array.nth (runes u) n))
 
   (doc unsafe-nth "returns the `n`th rune from a UTF-8-encoded string unsafely.")
-  (defn unsafe-nth [u n]
-    @(Array.unsafe-nth (runes u) n))
+  (defn unsafe-nth [u n] @(Array.unsafe-nth (runes u) n))
 
   (doc length "returns the length of a UTF-8-encoded string.")
-  (defn length [u]
-    (Array.length (runes u)))
+  (defn length [u] (Array.length (runes u)))
 
   (doc append "appends two UTF-8-encoded strings.")
-  (defn append [a b]
-    (UTF8.init (Array.concat &[@(runes a) @(runes b)])))
+  (defn append [a b] (UTF8.init (Array.concat &[@(runes a) @(runes b)])))
 
   (doc reverse "reverses a UTF-8-encoded string.")
-  (defn reverse [u]
-    (UTF8.init (Array.reverse @(runes u))))
+  (defn reverse [u] (UTF8.init (Array.reverse @(runes u))))
 
   (doc empty? "checks whether a UTF-8-encoded string is empty.")
-  (defn empty? [u]
-    (= (length (the (Ref UTF8) u)) 0))
+  (defn empty? [u] (= (length (the (Ref UTF8) u)) 0))
 
   (doc slice "returns a substring of the string from the index `a` to the index
 `b`.")
-  (defn slice [u a b]
-    (UTF8.init (Array.slice (runes u) a b)))
+  (defn slice [u a b] (UTF8.init (Array.slice (runes u) a b)))
   (implements slice UTF8.slice)
 
   (doc prefix "returns the first `n` chararacters of the string `u`.")
-  (defn prefix [u n]
-    (UTF8.init (Array.prefix (runes u) n)))
+  (defn prefix [u n] (UTF8.init (Array.prefix (runes u) n)))
 
   (doc suffix "returns the last `n` chararacters of the string `u`.")
-  (defn suffix [u n]
-    (UTF8.init (Array.suffix (runes u) n)))
+  (defn suffix [u n] (UTF8.init (Array.suffix (runes u) n)))
 
   (doc starts-with? "checks if the string `u` begins with the string `sub`.")
   (sig starts-with? (Fn [(Ref UTF8) (Ref UTF8)] Bool))
   (defn starts-with? [u sub]
-    (let [ls (length sub)]
-      (and (>= (length u) ls) (= sub &(UTF8.prefix u ls)))))
+    (let [ls (length sub)] (and (>= (length u) ls) (= sub &(UTF8.prefix u ls)))))
 
   (doc ends-with? "checks if the string `u` ends with the string `sub`.")
   (sig ends-with? (Fn [(Ref UTF8) (Ref UTF8)] Bool))
@@ -170,5 +146,4 @@ I wonder what else I can do with these functions?")
 
   (doc zero "Returns the empty string.")
   (defn zero [] (the UTF8 (from-string "")))
-  (implements zero UTF8.zero)
-)
+  (implements zero UTF8.zero))
