@@ -90,10 +90,9 @@ I wonder what else I can do with these functions?")
   (hidden from-runes)
   (private from-runes)
   (defn from-runes [r]
-    (Array.reduce
-      &(fn [x y] (String.append &x &(from-chars (Rune.bytes y))))
-      @""
-      r))
+    (Array.reduce &(fn [x y] (String.append &x &(from-chars (Rune.bytes y))))
+                  @""
+                  r))
 
   (doc from-string "creates an UTF-8 string from a regular string.")
   (defn from-string [s] (init (to-runes s)))
