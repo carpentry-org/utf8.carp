@@ -12,7 +12,9 @@
 
   (defn length [r] (Array.length (bytes r))))
 
-(defmodule RuneCopy (defn = [a b] (Rune.= &a &b)) (implements = RuneCopy.=))
+(defmodule RuneCopy
+  (defn = [a b] (Rune.= &a &b))
+  (implements = RuneCopy.=))
 
 (doc UTF8 "is a simple UTF-8 package for Carp. This nascent string replacement
 type allows you to use many of the functions you know from Carp strings while
@@ -90,9 +92,10 @@ I wonder what else I can do with these functions?")
   (hidden from-runes)
   (private from-runes)
   (defn from-runes [r]
-    (Array.reduce &(fn [x y] (String.append &x &(from-chars (Rune.bytes y))))
-                  @""
-                  r))
+    (Array.reduce
+      &(fn [x y] (String.append &x &(from-chars (Rune.bytes y))))
+      @""
+      r))
 
   (doc from-string "creates an UTF-8 string from a regular string.")
   (defn from-string [s] (init (to-runes s)))

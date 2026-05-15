@@ -58,10 +58,10 @@
     (assert-equal test
       true
       (UTF8.starts-with? &(UTF8.from-string "ölämpö")
-        &(UTF8.from-string "öläm"))
+                         &(UTF8.from-string "öläm"))
       "UTF-8 starts-with check works")
     (assert-equal test
       true
       (UTF8.ends-with? &(UTF8.from-string "pööläm")
-        &(UTF8.from-string "öläm"))
+                       &(UTF8.from-string "öläm"))
       "UTF-8 ends-with check works")))
