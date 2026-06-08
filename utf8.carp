@@ -92,10 +92,7 @@ I wonder what else I can do with these functions?")
   (hidden from-runes)
   (private from-runes)
   (defn from-runes [r]
-    (Array.reduce
-      &(fn [x y] (String.append &x &(from-chars (Rune.bytes y))))
-      @""
-      r))
+    (String.concat &(Array.copy-map &(fn [y] (from-chars (Rune.bytes y))) r)))
 
   (doc from-string "creates an UTF-8 string from a regular string.")
   (defn from-string [s] (init (to-runes s)))
@@ -128,10 +125,10 @@ I wonder what else I can do with these functions?")
   (defn slice [u a b] (UTF8.init (Array.slice (runes u) a b)))
   (implements slice UTF8.slice)
 
-  (doc prefix "returns the first `n` chararacters of the string `u`.")
+  (doc prefix "returns the first `n` characters of the string `u`.")
   (defn prefix [u n] (UTF8.init (Array.prefix (runes u) n)))
 
-  (doc suffix "returns the last `n` chararacters of the string `u`.")
+  (doc suffix "returns the last `n` characters of the string `u`.")
   (defn suffix [u n] (UTF8.init (Array.suffix (runes u) n)))
 
   (doc starts-with? "checks if the string `u` begins with the string `sub`.")
