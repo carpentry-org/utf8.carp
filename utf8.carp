@@ -128,7 +128,9 @@ I wonder what else I can do with these functions?")
   (doc prefix "returns the first `n` characters of the string `u`.")
   (defn prefix [u n] (UTF8.init (Array.prefix (runes u) n)))
 
-  (doc suffix "returns the last `n` characters of the string `u`.")
+  (doc suffix "returns the runes of the string `u` from index `n` to the end,
+i.e. `u` with its first `n` runes removed. Mirrors `Array.suffix` and
+`String.suffix`: `n` is a starting index, not a count taken from the end.")
   (defn suffix [u n] (UTF8.init (Array.suffix (runes u) n)))
 
   (doc starts-with? "checks if the string `u` begins with the string `sub`.")
