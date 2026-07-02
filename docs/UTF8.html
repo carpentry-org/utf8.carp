@@ -455,7 +455,9 @@ in bytes! Quite delicious!</p>
                         (suffix u n)
                     </pre>
                     <p class="doc">
-                        <p>returns the last <code>n</code> characters of the string <code>u</code>.</p>
+                        <p>returns the runes of the string <code>u</code> from index <code>n</code> to the end,
+i.e. <code>u</code> with its first <code>n</code> runes removed. Mirrors <code>Array.suffix</code> and
+<code>String.suffix</code>: <code>n</code> is a starting index, not a count taken from the end.</p>
 
                     </p>
                 </div>
