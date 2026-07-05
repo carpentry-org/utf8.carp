@@ -145,6 +145,45 @@ i.e. `u` with its first `n` runes removed. Mirrors `Array.suffix` and
           ls (length sub)]
       (and (>= lu ls) (= sub &(UTF8.suffix u (- lu ls))))))
 
+  (doc valid? "checks whether `bytes` is well-formed UTF-8 per RFC 3629,
+rejecting overlong encodings, UTF-16 surrogate code points
+(`U+D800`..`U+DFFF`), and code points beyond `U+10FFFF`. Useful to guard
+untrusted input before treating it as UTF-8, since `from-string` and
+`String.from-bytes` assume well-formed data.")
+  (sig valid? (Fn [(Ref (Array Byte))] Bool))
+  (defn valid? [bytes]
+    (let-do [len (Array.length bytes)
+             i 0
+             ok true]
+      (while (and ok (< i len))
+        (let-do [b0 (Byte.to-int @(Array.unsafe-nth bytes i))
+                 need 0
+                 lo 128
+                 hi 191]
+          ; lead byte -> continuation count + tightened first-cont range (Unicode Table 3-7)
+          (cond
+            (< b0 128) ()
+            (and (>= b0 194) (<= b0 223)) (set! need 1)
+            (= b0 224) (do (set! need 2) (set! lo 160))
+            (and (>= b0 225) (<= b0 236)) (set! need 2)
+            (= b0 237) (do (set! need 2) (set! hi 159))
+            (and (>= b0 238) (<= b0 239)) (set! need 2)
+            (= b0 240) (do (set! need 3) (set! lo 144))
+            (and (>= b0 241) (<= b0 243)) (set! need 3)
+            (= b0 244) (do (set! need 3) (set! hi 143))
+            (set! ok false))
+          (when (and ok (> need 0))
+            (if (> (+ i need) (- len 1))
+              (set! ok false)
+              (do
+                (let [c1 (Byte.to-int @(Array.unsafe-nth bytes (+ i 1)))]
+                  (when (or (< c1 lo) (> c1 hi)) (set! ok false)))
+                (for [k 2 (+ need 1)]
+                  (let [c (Byte.to-int @(Array.unsafe-nth bytes (+ i k)))]
+                    (when (or (< c 128) (> c 191)) (set! ok false)))))))
+          (when ok (set! i (+ i (+ need 1))))))
+      ok))
+
   (doc zero "Returns the empty string.")
   (defn zero [] (the UTF8 (from-string "")))
   (implements zero UTF8.zero))

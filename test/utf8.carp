@@ -72,4 +72,91 @@
       true
       (UTF8.ends-with? &(UTF8.from-string "pööläm")
                        &(UTF8.from-string "öläm"))
-      "UTF-8 ends-with check works")))
+      "UTF-8 ends-with check works")
+    ; valid? — well-formed UTF-8 (RFC 3629), byte-level
+    (assert-true test
+      (UTF8.valid? &(the (Array Byte) []))
+      "valid? accepts the empty string")
+    (assert-true test
+      (UTF8.valid? &(the (Array Byte) [(Byte.from-int 104) (Byte.from-int 105)]))
+      "valid? accepts ASCII")
+    (assert-true test
+      (UTF8.valid? &(the (Array Byte) [(Byte.from-int 194) (Byte.from-int 169)]))
+      "valid? accepts a 2-byte sequence (U+00A9)")
+    (assert-true test
+      (UTF8.valid?
+        &(the (Array Byte)
+              [(Byte.from-int 226) (Byte.from-int 130) (Byte.from-int 172)]))
+      "valid? accepts a 3-byte sequence (U+20AC)")
+    (assert-true test
+      (UTF8.valid?
+        &(the (Array Byte)
+              [(Byte.from-int 240)
+               (Byte.from-int 159)
+               (Byte.from-int 152)
+               (Byte.from-int 128)]))
+      "valid? accepts a 4-byte sequence (U+1F600)")
+    (assert-true test
+      (UTF8.valid?
+        &(the (Array Byte)
+              [(Byte.from-int 240)
+               (Byte.from-int 144)
+               (Byte.from-int 128)
+               (Byte.from-int 128)]))
+      "valid? accepts the minimal 4-byte code point (U+10000)")
+    (assert-true test
+      (UTF8.valid?
+        &(the (Array Byte)
+              [(Byte.from-int 244)
+               (Byte.from-int 143)
+               (Byte.from-int 191)
+               (Byte.from-int 191)]))
+      "valid? accepts the maximal code point (U+10FFFF)")
+    (assert-true test
+      (UTF8.valid?
+        &(the (Array Byte)
+              [(Byte.from-int 237) (Byte.from-int 159) (Byte.from-int 191)]))
+      "valid? accepts U+D7FF, just below the surrogate range")
+    (assert-true test
+      (UTF8.valid?
+        &(the (Array Byte)
+              [(Byte.from-int 238) (Byte.from-int 128) (Byte.from-int 128)]))
+      "valid? accepts U+E000, just above the surrogate range")
+    (assert-false test
+      (UTF8.valid? &(the (Array Byte) [(Byte.from-int 192) (Byte.from-int 128)]))
+      "valid? rejects an overlong 2-byte encoding (C0 80)")
+    (assert-false test
+      (UTF8.valid?
+        &(the (Array Byte)
+              [(Byte.from-int 224) (Byte.from-int 159) (Byte.from-int 191)]))
+      "valid? rejects an overlong 3-byte encoding (E0 9F BF)")
+    (assert-false test
+      (UTF8.valid? &(the (Array Byte) [(Byte.from-int 128)]))
+      "valid? rejects a lone continuation byte (80)")
+    (assert-false test
+      (UTF8.valid? &(the (Array Byte) [(Byte.from-int 194)]))
+      "valid? rejects a truncated sequence (C2)")
+    (assert-false test
+      (UTF8.valid?
+        &(the (Array Byte)
+              [(Byte.from-int 237) (Byte.from-int 160) (Byte.from-int 128)]))
+      "valid? rejects a low surrogate code point (ED A0 80, U+D800)")
+    (assert-false test
+      (UTF8.valid?
+        &(the (Array Byte)
+              [(Byte.from-int 237) (Byte.from-int 191) (Byte.from-int 191)]))
+      "valid? rejects a high surrogate code point (ED BF BF, U+DFFF)")
+    (assert-false test
+      (UTF8.valid?
+        &(the (Array Byte)
+              [(Byte.from-int 244)
+               (Byte.from-int 144)
+               (Byte.from-int 128)
+               (Byte.from-int 128)]))
+      "valid? rejects a code point above U+10FFFF (F4 90 80 80)")
+    (assert-false test
+      (UTF8.valid? &(the (Array Byte) [(Byte.from-int 245)]))
+      "valid? rejects an out-of-range lead byte (F5)")
+    (assert-false test
+      (UTF8.valid? &(the (Array Byte) [(Byte.from-int 255)]))
+      "valid? rejects a bare 0xFF byte")))

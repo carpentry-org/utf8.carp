@@ -502,6 +502,30 @@ i.e. <code>u</code> with its first <code>n</code> runes removed. Mirrors <code>A
                     </p>
                 </div>
                 <div class="binder">
+                    <a class="anchor" href="#valid?">
+                        <h3 id="valid?">
+                            valid?
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref (Array Byte) a)] Bool)
+                    </p>
+                    <pre class="args">
+                        (valid? bytes)
+                    </pre>
+                    <p class="doc">
+                        <p>checks whether <code>bytes</code> is well-formed UTF-8 per RFC 3629,
+rejecting overlong encodings, UTF-16 surrogate code points
+(<code>U+D800</code>..<code>U+DFFF</code>), and code points beyond <code>U+10FFFF</code>. Useful to guard
+untrusted input before treating it as UTF-8, since <code>from-string</code> and
+<code>String.from-bytes</code> assume well-formed data.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
                     <a class="anchor" href="#zero">
                         <h3 id="zero">
                             zero
