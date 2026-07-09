@@ -35,7 +35,7 @@ type allows you to use many of the functions you know from Carp strings while
 respecting unicode runes instead of just having bytes.</p>
 <h2>Installation</h2>
 <p>You can obtain this library like so:</p>
-<pre><code class="language-clojure">(load &quot;git@github.com:carpentry-org/utf8.carp@0.0.8&quot;)
+<pre><code class="language-clojure">(load &quot;git@github.com:carpentry-org/utf8.carp@0.1.0&quot;)
 </code></pre>
 <h2>Usage</h2>
 <p>First, let’s define a UTF-8 string to work with!</p>
@@ -455,7 +455,9 @@ in bytes! Quite delicious!</p>
                         (suffix u n)
                     </pre>
                     <p class="doc">
-                        <p>returns the last <code>n</code> characters of the string <code>u</code>.</p>
+                        <p>returns the runes of the string <code>u</code> from index <code>n</code> to the end,
+i.e. <code>u</code> with its first <code>n</code> runes removed. Mirrors <code>Array.suffix</code> and
+<code>String.suffix</code>: <code>n</code> is a starting index, not a count taken from the end.</p>
 
                     </p>
                 </div>
@@ -496,6 +498,30 @@ in bytes! Quite delicious!</p>
                     </span>
                     <p class="doc">
                         <p>updates the <code>runes</code> property of a <code>UTF8</code> using a function <code>f</code>.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
+                    <a class="anchor" href="#valid?">
+                        <h3 id="valid?">
+                            valid?
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref (Array Byte) a)] Bool)
+                    </p>
+                    <pre class="args">
+                        (valid? bytes)
+                    </pre>
+                    <p class="doc">
+                        <p>checks whether <code>bytes</code> is well-formed UTF-8 per RFC 3629,
+rejecting overlong encodings, UTF-16 surrogate code points
+(<code>U+D800</code>..<code>U+DFFF</code>), and code points beyond <code>U+10FFFF</code>. Useful to guard
+untrusted input before treating it as UTF-8, since <code>from-string</code> and
+<code>String.from-bytes</code> assume well-formed data.</p>
 
                     </p>
                 </div>
