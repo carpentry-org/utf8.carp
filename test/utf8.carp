@@ -159,4 +159,23 @@
       "valid? rejects an out-of-range lead byte (F5)")
     (assert-false test
       (UTF8.valid? &(the (Array Byte) [(Byte.from-int 255)]))
-      "valid? rejects a bare 0xFF byte")))
+      "valid? rejects a bare 0xFF byte")
+    ; regression: characters whose codepoint low byte is 0x80..0xBF (Greek,
+    ; U+0080..U+00BF, ...) used to be merged into the preceding rune, so
+    ; length/nth/reverse were all off. (ä/ö/ü happen to avoid it.)
+    (assert-equal test
+      5
+      (UTF8.length &(from-string "hεllö"))
+      "UTF-8 length counts Greek runes (the doc example)")
+    (assert-equal test
+      "ε"
+      &(str &(unsafe-nth &(from-string "hεllö") 1))
+      "UTF-8 indexing finds a Greek rune")
+    (assert-equal test
+      "öllεh"
+      &(str &(UTF8.reverse &(from-string "hεllö")))
+      "UTF-8 reversing keeps Greek runes intact")
+    (assert-equal test
+      5
+      (UTF8.length &(from-string "λόγος"))
+      "UTF-8 length counts an all-Greek word")))

@@ -70,24 +70,13 @@ I wonder what else I can do with these functions?")
   (defn = [a b] (= (runes a) (runes b)))
   (implements = UTF8.=)
 
-  (hidden utf8-cont?)
-  (private utf8-cont?)
-  (defn utf8-cont? [c] (let [i (Char.to-int c)] (= 128 (Int.bit-and 192 i))))
-
   (hidden to-runes)
   (private to-runes)
+  ; `chars` already yields one codepoint per character, so each is its own rune.
+  ; (The old continuation-byte grouping corrupted any codepoint whose low byte is
+  ; 0x80..0xBF — Greek, Cyrillic, U+0080..U+00BF, many emoji.)
   (defn to-runes [s]
-    (let-do [chs (chars s)
-             rune (Rune.init [])
-             res []]
-      (for [i 0 (Array.length &chs)]
-        (let-do [cur @(Array.unsafe-nth &chs i)]
-          (when-do (and (not (utf8-cont? cur)) (> (Rune.length &rune) 0))
-            (set! res (Array.push-back res @&rune))
-            (set! rune (Rune.init [])))
-          (set! rune (Rune.add-byte &rune cur))))
-      (when (> (Rune.length &rune) 0) (set! res (Array.push-back res rune)))
-      res))
+    (let [chs (chars s)] (Array.copy-map &(fn [c] (Rune.init [@c])) &chs)))
 
   (hidden from-runes)
   (private from-runes)
