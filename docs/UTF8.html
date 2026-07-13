@@ -179,6 +179,29 @@ in bytes! Quite delicious!</p>
                     </p>
                 </div>
                 <div class="binder">
+                    <a class="anchor" href="#from-bytes">
+                        <h3 id="from-bytes">
+                            from-bytes
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref (Array Byte) a)] (Maybe UTF8))
+                    </p>
+                    <pre class="args">
+                        (from-bytes bytes)
+                    </pre>
+                    <p class="doc">
+                        <p>creates a UTF-8 string from raw <code>bytes</code>, first checking with
+<a href="#valid?">valid?</a> that they are well-formed UTF-8. Returns <code>Nothing</code> when the
+bytes are not valid UTF-8, so untrusted input can be turned into a <code>UTF8</code> safely
+— unlike <a href="#from-string">from-string</a>, which assumes well-formed data.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
                     <a class="anchor" href="#from-string">
                         <h3 id="from-string">
                             from-string

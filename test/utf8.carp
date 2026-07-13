@@ -178,4 +178,36 @@
     (assert-equal test
       5
       (UTF8.length &(from-string "λόγος"))
-      "UTF-8 length counts an all-Greek word")))
+      "UTF-8 length counts an all-Greek word")
+    ; --- from-bytes: validating constructor over raw, possibly untrusted bytes ---
+    (assert-equal test
+      "hεllö"
+      &(match (from-bytes &(String.to-bytes "hεllö"))
+        (Maybe.Just u) (str &u)
+        (Maybe.Nothing) @"INVALID")
+      "from-bytes accepts well-formed UTF-8 and round-trips it")
+    (assert-true test
+      (Maybe.just? &(from-bytes &(String.to-bytes "")))
+      "from-bytes accepts empty input as valid UTF-8")
+    (assert-true test
+      (Maybe.nothing? &(from-bytes &[(Byte.from-int 128)]))
+      "from-bytes rejects a lone continuation byte")
+    (assert-true test
+      (Maybe.nothing? &(from-bytes &[(Byte.from-int 192) (Byte.from-int 128)]))
+      "from-bytes rejects an overlong encoding")
+    (assert-true test
+      (Maybe.nothing?
+        &(from-bytes
+          &[(Byte.from-int 237) (Byte.from-int 160) (Byte.from-int 128)]))
+      "from-bytes rejects a UTF-16 surrogate code point")
+    (assert-true test
+      (Maybe.nothing? &(from-bytes &[(Byte.from-int 195)]))
+      "from-bytes rejects a truncated multibyte sequence")
+    (assert-true test
+      (Maybe.nothing?
+        &(from-bytes
+          &[(Byte.from-int 245)
+            (Byte.from-int 128)
+            (Byte.from-int 128)
+            (Byte.from-int 128)]))
+      "from-bytes rejects a code point beyond U+10FFFF")))

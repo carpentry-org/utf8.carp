@@ -173,6 +173,16 @@ untrusted input before treating it as UTF-8, since `from-string` and
           (when ok (set! i (+ i (+ need 1))))))
       ok))
 
+  (doc from-bytes "creates a UTF-8 string from raw `bytes`, first checking with
+[valid?](#valid?) that they are well-formed UTF-8. Returns `Nothing` when the
+bytes are not valid UTF-8, so untrusted input can be turned into a `UTF8` safely
+— unlike [from-string](#from-string), which assumes well-formed data.")
+  (sig from-bytes (Fn [(Ref (Array Byte))] (Maybe UTF8)))
+  (defn from-bytes [bytes]
+    (if (valid? bytes)
+      (Maybe.Just (from-string &(String.from-bytes bytes)))
+      (Maybe.Nothing)))
+
   (doc zero "Returns the empty string.")
   (defn zero [] (the UTF8 (from-string "")))
   (implements zero UTF8.zero))
