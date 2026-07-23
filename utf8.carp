@@ -134,6 +134,48 @@ i.e. `u` with its first `n` runes removed. Mirrors `Array.suffix` and
           ls (length sub)]
       (and (>= lu ls) (= sub &(UTF8.suffix u (- lu ls))))))
 
+  (hidden decode-cont)
+  (private decode-cont)
+  (sig decode-cont
+       (Fn [(Ref (Array Byte)) Int Int Int Int Int] (Maybe (Pair Int Int))))
+  (defn decode-cont [bytes pos len lead ncont min-cp]
+    (if (> (+ pos ncont) (- len 1))
+      (Maybe.Nothing)
+      (let-do [cp lead
+               ok true]
+        (for [k 1 (+ ncont 1)]
+          (let [c (Byte.to-int @(Array.unsafe-nth bytes (+ pos k)))]
+            (if (= (Int.bit-and c 192) 128)
+              (set! cp (Int.bit-or (Int.bit-shift-left cp 6) (Int.bit-and c 63)))
+              (set! ok false))))
+        (if (and ok
+                 (>= cp min-cp)
+                 (not (and (>= cp 55296) (<= cp 57343)))
+                 (<= cp 1114111))
+          (Maybe.Just (Pair.init cp (+ ncont 1)))
+          (Maybe.Nothing)))))
+
+  (doc decode-at "decodes the single UTF-8 code point beginning at byte offset
+`pos` in `bytes`, validating it per RFC 3629 / Unicode Table 3-7: it rejects
+overlong encodings, UTF-16 surrogate code points (`U+D800`..`U+DFFF`), code
+points beyond `U+10FFFF`, and out-of-range continuation bytes. Returns `(Just
+(Pair codepoint width))` — the scalar code-point value and its byte width
+(`1`..`4`) — or `(Nothing)` at end of input, on truncation, or on malformed
+input.")
+  (sig decode-at (Fn [(Ref (Array Byte)) Int] (Maybe (Pair Int Int))))
+  (defn decode-at [bytes pos]
+    (let [len (Array.length bytes)]
+      (if (or (< pos 0) (>= pos len))
+        (Maybe.Nothing)
+        (let [b0 (Byte.to-int @(Array.unsafe-nth bytes pos))]
+          (cond
+            (< b0 128) (Maybe.Just (Pair.init b0 1))
+            (< b0 192) (Maybe.Nothing)
+            (< b0 224) (decode-cont bytes pos len (Int.bit-and b0 31) 1 128)
+            (< b0 240) (decode-cont bytes pos len (Int.bit-and b0 15) 2 2048)
+            (< b0 248) (decode-cont bytes pos len (Int.bit-and b0 7) 3 65536)
+            (Maybe.Nothing))))))
+
   (doc valid? "checks whether `bytes` is well-formed UTF-8 per RFC 3629,
 rejecting overlong encodings, UTF-16 surrogate code points
 (`U+D800`..`U+DFFF`), and code points beyond `U+10FFFF`. Useful to guard
@@ -145,32 +187,9 @@ untrusted input before treating it as UTF-8, since `from-string` and
              i 0
              ok true]
       (while (and ok (< i len))
-        (let-do [b0 (Byte.to-int @(Array.unsafe-nth bytes i))
-                 need 0
-                 lo 128
-                 hi 191]
-          ; lead byte -> continuation count + tightened first-cont range (Unicode Table 3-7)
-          (cond
-            (< b0 128) ()
-            (and (>= b0 194) (<= b0 223)) (set! need 1)
-            (= b0 224) (do (set! need 2) (set! lo 160))
-            (and (>= b0 225) (<= b0 236)) (set! need 2)
-            (= b0 237) (do (set! need 2) (set! hi 159))
-            (and (>= b0 238) (<= b0 239)) (set! need 2)
-            (= b0 240) (do (set! need 3) (set! lo 144))
-            (and (>= b0 241) (<= b0 243)) (set! need 3)
-            (= b0 244) (do (set! need 3) (set! hi 143))
-            (set! ok false))
-          (when (and ok (> need 0))
-            (if (> (+ i need) (- len 1))
-              (set! ok false)
-              (do
-                (let [c1 (Byte.to-int @(Array.unsafe-nth bytes (+ i 1)))]
-                  (when (or (< c1 lo) (> c1 hi)) (set! ok false)))
-                (for [k 2 (+ need 1)]
-                  (let [c (Byte.to-int @(Array.unsafe-nth bytes (+ i k)))]
-                    (when (or (< c 128) (> c 191)) (set! ok false)))))))
-          (when ok (set! i (+ i (+ need 1))))))
+        (match (decode-at bytes i)
+          (Maybe.Just p) (set! i (+ i @(Pair.b &p)))
+          (Maybe.Nothing) (set! ok false)))
       ok))
 
   (doc from-bytes "creates a UTF-8 string from raw `bytes`, first checking with

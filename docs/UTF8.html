@@ -119,6 +119,31 @@ in bytes! Quite delicious!</p>
                     </p>
                 </div>
                 <div class="binder">
+                    <a class="anchor" href="#decode-at">
+                        <h3 id="decode-at">
+                            decode-at
+                        </h3>
+                    </a>
+                    <div class="description">
+                        defn
+                    </div>
+                    <p class="sig">
+                        (Fn [(Ref (Array Byte) a), Int] (Maybe (Pair Int Int)))
+                    </p>
+                    <pre class="args">
+                        (decode-at bytes pos)
+                    </pre>
+                    <p class="doc">
+                        <p>decodes the single UTF-8 code point beginning at byte offset
+<code>pos</code> in <code>bytes</code>, validating it per RFC 3629 / Unicode Table 3-7: it rejects
+overlong encodings, UTF-16 surrogate code points (<code>U+D800</code>..<code>U+DFFF</code>), code
+points beyond <code>U+10FFFF</code>, and out-of-range continuation bytes. Returns <code>(Just (Pair codepoint width))</code> — the scalar code-point value and its byte width
+(<code>1</code>..<code>4</code>) — or <code>(Nothing)</code> at end of input, on truncation, or on malformed
+input.</p>
+
+                    </p>
+                </div>
+                <div class="binder">
                     <a class="anchor" href="#delete">
                         <h3 id="delete">
                             delete

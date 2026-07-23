@@ -4,6 +4,9 @@
 
 (use-all Test UTF8)
 
+(sig bytes (Fn [(Ref (Array Int))] (Array Byte)))
+(defn bytes [ns] (Array.copy-map &(fn [n] (Byte.from-int @n)) ns))
+
 (defn main []
   (with-test test
     (assert-equal test
@@ -210,4 +213,121 @@
             (Byte.from-int 128)
             (Byte.from-int 128)
             (Byte.from-int 128)]))
-      "from-bytes rejects a code point beyond U+10FFFF")))
+      "from-bytes rejects a code point beyond U+10FFFF")
+    ; decode-at — incremental single-code-point decoder
+    (assert-equal test
+      &(Maybe.Just (Pair.init 0 1))
+      &(decode-at &(bytes &[65 0 66]) 1)
+      "decode-at reads an embedded NUL as the one-byte code point U+0000")
+    (assert-equal test
+      &(Maybe.Just (Pair.init 127 1))
+      &(decode-at &(bytes &[127]) 0)
+      "decode-at U+007F is the maximal one-byte code point (width 1)")
+    (assert-equal test
+      &(Maybe.Just (Pair.init 128 2))
+      &(decode-at &(bytes &[194 128]) 0)
+      "decode-at U+0080 is the minimal two-byte code point (width 2)")
+    (assert-equal test
+      &(Maybe.Just (Pair.init 2047 2))
+      &(decode-at &(bytes &[223 191]) 0)
+      "decode-at U+07FF is the maximal two-byte code point (width 2)")
+    (assert-equal test
+      &(Maybe.Just (Pair.init 2048 3))
+      &(decode-at &(bytes &[224 160 128]) 0)
+      "decode-at U+0800 is the minimal three-byte code point (width 3)")
+    (assert-equal test
+      &(Maybe.Just (Pair.init 65535 3))
+      &(decode-at &(bytes &[239 191 191]) 0)
+      "decode-at U+FFFF is the maximal three-byte code point (width 3)")
+    (assert-equal test
+      &(Maybe.Just (Pair.init 65536 4))
+      &(decode-at &(bytes &[240 144 128 128]) 0)
+      "decode-at U+10000 is the minimal four-byte code point (width 4)")
+    (assert-equal test
+      &(Maybe.Just (Pair.init 1114111 4))
+      &(decode-at &(bytes &[244 143 191 191]) 0)
+      "decode-at U+10FFFF is the maximal code point (width 4)")
+    (assert-equal test
+      &(Maybe.Just (Pair.init 55295 3))
+      &(decode-at &(bytes &[237 159 191]) 0)
+      "decode-at U+D7FF just below the surrogate hole is accepted")
+    (assert-equal test
+      &(the (Maybe (Pair Int Int)) (Maybe.Nothing))
+      &(decode-at &(bytes &[237 160 128]) 0)
+      "decode-at rejects the low surrogate U+D800")
+    (assert-equal test
+      &(the (Maybe (Pair Int Int)) (Maybe.Nothing))
+      &(decode-at &(bytes &[237 191 191]) 0)
+      "decode-at rejects the high surrogate U+DFFF")
+    (assert-equal test
+      &(Maybe.Just (Pair.init 57344 3))
+      &(decode-at &(bytes &[238 128 128]) 0)
+      "decode-at U+E000 just above the surrogate hole is accepted")
+    (assert-equal test
+      &(the (Maybe (Pair Int Int)) (Maybe.Nothing))
+      &(decode-at &(bytes &[192 128]) 0)
+      "decode-at rejects an overlong two-byte encoding (C0 80)")
+    (assert-equal test
+      &(the (Maybe (Pair Int Int)) (Maybe.Nothing))
+      &(decode-at &(bytes &[224 128 128]) 0)
+      "decode-at rejects an overlong three-byte encoding (E0 80 80)")
+    (assert-equal test
+      &(the (Maybe (Pair Int Int)) (Maybe.Nothing))
+      &(decode-at &(bytes &[240 128 128 128]) 0)
+      "decode-at rejects an overlong four-byte encoding (F0 80 80 80)")
+    (assert-equal test
+      &(the (Maybe (Pair Int Int)) (Maybe.Nothing))
+      &(decode-at &(bytes &[194]) 0)
+      "decode-at rejects a truncated two-byte sequence (C2)")
+    (assert-equal test
+      &(the (Maybe (Pair Int Int)) (Maybe.Nothing))
+      &(decode-at &(bytes &[224 160]) 0)
+      "decode-at rejects a truncated three-byte sequence (E0 A0)")
+    (assert-equal test
+      &(the (Maybe (Pair Int Int)) (Maybe.Nothing))
+      &(decode-at &(bytes &[240 144 128]) 0)
+      "decode-at rejects a truncated four-byte sequence (F0 90 80)")
+    (assert-equal test
+      &(the (Maybe (Pair Int Int)) (Maybe.Nothing))
+      &(decode-at &(bytes &[128]) 0)
+      "decode-at rejects a lone continuation byte (80)")
+    (assert-equal test
+      &(the (Maybe (Pair Int Int)) (Maybe.Nothing))
+      &(decode-at &(bytes &[191]) 0)
+      "decode-at rejects a lone continuation byte (BF)")
+    (assert-equal test
+      &(the (Maybe (Pair Int Int)) (Maybe.Nothing))
+      &(decode-at &(bytes &[245 128 128 128]) 0)
+      "decode-at rejects a code point above U+10FFFF (F5 80 80 80)")
+    (assert-equal test
+      &(the (Maybe (Pair Int Int)) (Maybe.Nothing))
+      &(decode-at &(bytes &[245]) 0)
+      "decode-at rejects an out-of-range lead byte (F5)")
+    (assert-equal test
+      &(the (Maybe (Pair Int Int)) (Maybe.Nothing))
+      &(decode-at &(bytes &[248]) 0)
+      "decode-at rejects an out-of-range lead byte (F8)")
+    (assert-equal test
+      &(the (Maybe (Pair Int Int)) (Maybe.Nothing))
+      &(decode-at &(bytes &[255]) 0)
+      "decode-at rejects a bare 0xFF byte")
+    (assert-equal test
+      &(the (Maybe (Pair Int Int)) (Maybe.Nothing))
+      &(decode-at &(the (Array Byte) []) 0)
+      "decode-at returns Nothing at the start of an empty buffer")
+    (assert-equal test
+      &(the (Maybe (Pair Int Int)) (Maybe.Nothing))
+      &(decode-at &(bytes &[65]) 1)
+      "decode-at returns Nothing when pos is at the end of the buffer")
+    (assert-equal test
+      &(the (Maybe (Pair Int Int)) (Maybe.Nothing))
+      &(decode-at &(bytes &[65]) -1)
+      "decode-at returns Nothing for a negative offset")
+    (assert-equal test
+      &(Maybe.Just (Pair.init 65 1))
+      &(decode-at &(bytes &[65 206 181]) 0)
+      "decode-at decodes the ASCII code point at offset 0 of a mixed buffer")
+    (assert-equal test
+      &(Maybe.Just (Pair.init 949 2))
+      &(decode-at &(bytes &[65 206 181]) 1)
+      "decode-at decodes the multibyte code point at a non-zero offset")))
